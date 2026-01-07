@@ -11,15 +11,14 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 /**
  * Hook implementations for the Orbit Banner module.
  */
-class OrbitBannerHooks
-{
+class OrbitBannerHooks{
   use StringTranslationTrait;
 
   /**
    * Implements hook_help().
    */
   #[Hook('help')]
-  public function help(string $route_name, RouteMatchInterface $route_match): ?string g{
+  public function help(string $route_name, RouteMatchInterface $route_match): ?string{
     switch ($route_name) {
       case 'help.page.orbit_banner':
         $output = '';
