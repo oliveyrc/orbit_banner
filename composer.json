@@ -1,0 +1,17 @@
+{
+    "name": "oliveyrc/orbit_banner",
+    "description": "Provides a banner block, with images, video, title, text and link.",
+    
+    "type": "drupal-module",
+    "authors": [
+        {
+            "name": "Ricahrd Olivey (oliveyrc)",
+            "homepage": "https://www.drupal.org/u/oliveyrc",
+            "role": "Maintainer"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/oliveyrc/orbit_banner/issues",
+        "source": "https://github.com/oliveyrc/orbit_banner"
+    }
+}
