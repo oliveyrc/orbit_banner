@@ -1,6 +1,6 @@
 <?php
 
-  /**
-   * @file
-   * Provides install functionality for the Orbit Banner module.
-   */
+/**
+ * @file
+ * Provides install functionality for the Orbit Banner module.
+ */
