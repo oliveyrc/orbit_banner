@@ -3,4 +3,3 @@ type: module
 description: Provides a banner block, with images, video, title, text and link.
 core_version_requirement:  ^11
 package: Orbit
-version: 0.0.1
