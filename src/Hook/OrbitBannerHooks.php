@@ -22,9 +22,10 @@ class OrbitBannerHooks
       case 'help.page.orbit_banner':
         $output = '';
         $output .= '<h3>' . t('About') . '</h3>';
-        $output .= '<p>' . t('This is an example module.') . '</p>';
+        $output .= '<p>' . t('This module provides banner functionality, in the form of a block and creates the required fields on a content type.') . '</p>';
+
         return $output;
     }
-    return null;
+    return NULL;
   }
 }
