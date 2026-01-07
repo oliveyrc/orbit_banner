@@ -19,8 +19,7 @@ class OrbitBannerHooks
    * Implements hook_help().
    */
   #[Hook('help')]
-  public function help(string $route_name, RouteMatchInterface $route_match): ?string
-  {
+  public function help(string $route_name, RouteMatchInterface $route_match): ?string g{
     switch ($route_name) {
       case 'help.page.orbit_banner':
         $output = '';
@@ -31,4 +30,5 @@ class OrbitBannerHooks
     }
     return NULL;
   }
+
 }
