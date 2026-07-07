@@ -4,3 +4,72 @@
  * @file
  * Provides install functionality for the Orbit Banner module.
  */
+
+/**
+ * Implements hook_install().
+ */
+function orbit_banner_install(): void {
+	_orbit_banner_apply_page_banner_field_group();
+}
+
+/**
+ * Adds the Banner field group to the Page node form display.
+ */
+function _orbit_banner_apply_page_banner_field_group(): void {
+	if (!\Drupal::moduleHandler()->moduleExists('field_group')) {
+		return;
+	}
+
+	$form_display = \Drupal::service('entity_display.repository')
+		->getFormDisplay('node', 'page', 'default');
+
+	$field_definitions = \Drupal::service('entity_field.manager')
+		->getFieldDefinitions('node', 'page');
+
+	$weights = [
+		'field_orbit_banner_help' => 11,
+		'field_orbit_banner_title' => 12,
+		'field_orbit_banner_image' => 13,
+		'field_orbit_banner_video' => 14,
+		'field_orbit_banner_size' => 15,
+		'field_orbit_banner_colour' => 16,
+	];
+
+	foreach ($weights as $field_name => $weight) {
+		if (!isset($field_definitions[$field_name])) {
+			continue;
+		}
+
+		$component = $form_display->getComponent($field_name) ?? [];
+		$component['region'] = 'content';
+		$component['weight'] = $weight;
+		$form_display->setComponent($field_name, $component);
+	}
+
+	$form_display->setThirdPartySetting('field_group', 'group_banner', [
+		'children' => [
+			'field_orbit_banner_help',
+			'field_orbit_banner_title',
+			'field_orbit_banner_image',
+			'field_orbit_banner_video',
+			'field_orbit_banner_size',
+			'field_orbit_banner_colour',
+		],
+		'label' => 'Banner',
+		'region' => 'content',
+		'parent_name' => '',
+		'weight' => 9,
+		'format_type' => 'tab',
+		'format_settings' => [
+			'classes' => '',
+			'show_empty_fields' => FALSE,
+			'id' => '',
+			'label_as_html' => FALSE,
+			'formatter' => 'closed',
+			'description' => '',
+			'required_fields' => TRUE,
+		],
+	]);
+
+	$form_display->save();
+}

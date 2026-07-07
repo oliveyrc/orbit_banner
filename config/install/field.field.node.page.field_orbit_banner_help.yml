@@ -1,0 +1,23 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_orbit_banner_help
+    - node.type.page
+  module:
+    - markup
+id: node.page.field_orbit_banner_help
+field_name: field_orbit_banner_help
+entity_type: node
+bundle: page
+label: 'Banner Help'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  markup:
+    value: '<p>Adding a video will override an image.</p>'
+    format: basic_html
+field_type: markup

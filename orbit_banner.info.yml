@@ -3,3 +3,7 @@ type: module
 description: Provides a banner block, with images, video, title, text and link.
 core_version_requirement:  ^11
 package: Orbit
+dependencies:
+  - colour_field:color_field
+  - markup:markup
+  - field_group:field_group
