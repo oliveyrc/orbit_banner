@@ -26,39 +26,104 @@ function _orbit_banner_apply_page_banner_field_group(): void {
 	$field_definitions = \Drupal::service('entity_field.manager')
 		->getFieldDefinitions('node', 'page');
 
-	$weights = [
-		'field_orbit_banner_help' => 11,
-		'field_orbit_banner_title' => 12,
-		'field_orbit_banner_image' => 13,
-		'field_orbit_banner_video' => 14,
-		'field_orbit_banner_size' => 15,
-		'field_orbit_banner_colour' => 16,
+	$banner_components = [
+		'field_orbit_banner_help' => [
+			'type' => 'markup',
+			'weight' => 11,
+			'region' => 'content',
+			'settings' => [],
+			'third_party_settings' => [],
+		],
+		'field_orbit_banner_title' => [
+			'type' => 'string_textfield',
+			'weight' => 12,
+			'region' => 'content',
+			'settings' => [
+				'size' => 60,
+				'placeholder' => '',
+			],
+			'third_party_settings' => [],
+		],
+		'field_orbit_banner_image' => [
+			'type' => 'media_library_widget',
+			'weight' => 13,
+			'region' => 'content',
+			'settings' => [
+				'media_types' => [],
+			],
+			'third_party_settings' => [
+				'media_library_edit' => [
+					'show_edit' => TRUE,
+					'edit_form_mode' => 'default',
+				],
+			],
+		],
+		'field_orbit_banner_video' => [
+			'type' => 'media_library_widget',
+			'weight' => 14,
+			'region' => 'content',
+			'settings' => [
+				'media_types' => [],
+			],
+			'third_party_settings' => [
+				'media_library_edit' => [
+					'show_edit' => TRUE,
+					'edit_form_mode' => 'default',
+				],
+			],
+		],
+		'field_orbit_banner_size' => [
+			'type' => 'options_select',
+			'weight' => 15,
+			'region' => 'content',
+			'settings' => [],
+			'third_party_settings' => [],
+		],
+		'field_orbit_banner_colour' => [
+			'type' => 'color_field_widget_box',
+			'weight' => 16,
+			'region' => 'content',
+			'settings' => [
+				'default_colors' => "#ac725e,#d06b64,#f83a22,#fa573c,#ff7537,#ffad46\n#42d692,#16a765,#7bd148,#b3dc6c,#fbe983\n#92e1c0,#9fe1e7,#9fc6e7,#4986e7,#9a9cff\n#b99aff,#c2c2c2,#cabdbf,#cca6ac,#f691b2\n#cd74e6,#a47ae2",
+			],
+			'third_party_settings' => [],
+		],
 	];
 
-	foreach ($weights as $field_name => $weight) {
+	$group_banner_children = [];
+
+	foreach ($banner_components as $field_name => $component) {
 		if (!isset($field_definitions[$field_name])) {
 			continue;
 		}
 
-		$component = $form_display->getComponent($field_name) ?? [];
-		$component['region'] = 'content';
-		$component['weight'] = $weight;
 		$form_display->setComponent($field_name, $component);
+		$group_banner_children[] = $field_name;
 	}
 
-	$form_display->setThirdPartySetting('field_group', 'group_banner', [
-		'children' => [
-			'field_orbit_banner_help',
-			'field_orbit_banner_title',
-			'field_orbit_banner_image',
-			'field_orbit_banner_video',
-			'field_orbit_banner_size',
-			'field_orbit_banner_colour',
-		],
-		'label' => 'Banner',
+	$form_display->setThirdPartySetting('field_group', 'group_tabs', [
+		'children' => ['group_banner'],
+		'label' => 'Tabs',
 		'region' => 'content',
 		'parent_name' => '',
-		'weight' => 9,
+		'weight' => 7,
+		'format_type' => 'tabs',
+		'format_settings' => [
+			'classes' => '',
+			'show_empty_fields' => FALSE,
+			'id' => '',
+			'label_as_html' => FALSE,
+			'direction' => 'vertical',
+			'width_breakpoint' => 640,
+		],
+	]);
+
+	$form_display->setThirdPartySetting('field_group', 'group_banner', [
+		'children' => $group_banner_children,
+		'label' => 'Banner',
+		'region' => 'content',
+		'parent_name' => 'group_tabs',
+		'weight' => 6,
 		'format_type' => 'tab',
 		'format_settings' => [
 			'classes' => '',

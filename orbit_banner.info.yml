@@ -6,4 +6,5 @@ package: Orbit
 dependencies:
   - colour_field:color_field
   - markup:markup
+  - media_library_edit:media_library_edit
   - field_group:field_group
