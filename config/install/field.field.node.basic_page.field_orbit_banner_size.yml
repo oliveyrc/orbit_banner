@@ -3,13 +3,13 @@ status: true
 dependencies:
   config:
     - field.storage.node.field_orbit_banner_size
-    - node.type.page
+    - node.type.basic_page
   module:
     - options
-id: node.page.field_orbit_banner_size
+id: node.basic_page.field_orbit_banner_size
 field_name: field_orbit_banner_size
 entity_type: node
-bundle: page
+bundle: basic_page
 label: Size
 description: ''
 required: false

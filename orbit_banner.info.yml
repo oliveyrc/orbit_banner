@@ -8,3 +8,4 @@ dependencies:
   - markup:markup
   - media_library_edit:media_library_edit
   - field_group:field_group
+  - orbit_media:orbit_media

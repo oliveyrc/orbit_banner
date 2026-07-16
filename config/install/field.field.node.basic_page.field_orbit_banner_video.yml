@@ -4,11 +4,11 @@ dependencies:
   config:
     - field.storage.node.field_orbit_banner_video
     - media.type.banner_video
-    - node.type.page
-id: node.page.field_orbit_banner_video
+    - node.type.basic_page
+id: node.basic_page.field_orbit_banner_video
 field_name: field_orbit_banner_video
 entity_type: node
-bundle: page
+bundle: basic_page
 label: Video
 description: ''
 required: false

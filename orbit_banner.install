@@ -21,10 +21,10 @@ function _orbit_banner_apply_page_banner_field_group(): void {
 	}
 
 	$form_display = \Drupal::service('entity_display.repository')
-		->getFormDisplay('node', 'page', 'default');
+		->getFormDisplay('node', 'basic_page', 'default');
 
 	$field_definitions = \Drupal::service('entity_field.manager')
-		->getFieldDefinitions('node', 'page');
+		->getFieldDefinitions('node', 'basic_page');
 
 	$banner_components = [
 		'field_orbit_banner_help' => [

@@ -4,11 +4,11 @@ dependencies:
   config:
     - field.storage.node.field_orbit_banner_image
     - media.type.banner_image
-    - node.type.page
-id: node.page.field_orbit_banner_image
+    - node.type.basic_page
+id: node.basic_page.field_orbit_banner_image
 field_name: field_orbit_banner_image
 entity_type: node
-bundle: page
+bundle: basic_page
 label: Image
 description: ''
 required: false
