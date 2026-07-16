@@ -29,14 +29,14 @@ function _orbit_banner_apply_page_banner_field_group(): void {
 	$banner_components = [
 		'field_orbit_banner_help' => [
 			'type' => 'markup',
-			'weight' => 11,
+			'weight' => 10,
 			'region' => 'content',
 			'settings' => [],
 			'third_party_settings' => [],
 		],
 		'field_orbit_banner_title' => [
 			'type' => 'string_textfield',
-			'weight' => 12,
+			'weight' => 11,
 			'region' => 'content',
 			'settings' => [
 				'size' => 60,
@@ -44,6 +44,16 @@ function _orbit_banner_apply_page_banner_field_group(): void {
 			],
 			'third_party_settings' => [],
 		],
+    'field_orbit_banner_text' => [
+      'type' => 'text_textarea',
+      'weight' => 12,
+      'region' => 'content',
+      'settings' => [
+        'rows' => 5,
+        'placeholder' => '',
+      ],
+      'third_party_settings' => [],
+    ],
 		'field_orbit_banner_image' => [
 			'type' => 'media_library_widget',
 			'weight' => 13,
