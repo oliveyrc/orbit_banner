@@ -1,0 +1,28 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.site_setting_entity.field_image
+    - media.type.banner_image
+    - site_settings.site_setting_entity_type.banner
+id: site_setting_entity.banner.field_image
+field_name: field_image
+entity_type: site_setting_entity
+bundle: banner
+label: Image
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:media'
+  handler_settings:
+    target_bundles:
+      banner_image: banner_image
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference
