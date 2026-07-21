@@ -1,0 +1,25 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - crop.type.banner_image_mobile
+  module:
+    - crop
+name: banner_image_mobile
+label: 'Banner image - Mobile'
+effects:
+  26d33a7d-a93d-433e-8e66-8f795548b3ff:
+    uuid: 26d33a7d-a93d-433e-8e66-8f795548b3ff
+    id: crop_crop
+    weight: 1
+    data:
+      crop_type: banner_image_mobile
+      automatic_crop_provider: null
+  26cc79fd-d0c8-449f-8034-a0ee612cdaa8:
+    uuid: 26cc79fd-d0c8-449f-8034-a0ee612cdaa8
+    id: image_scale_and_crop
+    weight: 2
+    data:
+      width: 400
+      height: 266
+      anchor: center-center

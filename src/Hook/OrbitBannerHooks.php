@@ -30,4 +30,24 @@ class OrbitBannerHooks {
     return NULL;
   }
 
+  /**
+   * Implements hook_theme().
+   *
+   * @return array[]
+   */
+  #[Hook('theme')]
+  public function theme($existing, $type, $theme, $path): array {
+    return [
+      'orbit_page_banner' => [
+        'variables' => [
+          'title' => NULL,
+          'description' => NULL,
+          'image_url' => NULL,
+          'alt_text' => NULL,
+          'video_url' => NULL,
+          'poster_url' => NULL,
+        ],
+      ],
+    ];
+  }
 }

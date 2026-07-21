@@ -1,0 +1,11 @@
+langcode: en
+status: true
+dependencies: {  }
+label: 'Banner image - Mobile'
+id: banner_image_mobile
+description: 'Banner image crop used on mobile sized screens.'
+aspect_ratio: '3:2'
+soft_limit_width: null
+soft_limit_height: null
+hard_limit_width: 400
+hard_limit_height: 266

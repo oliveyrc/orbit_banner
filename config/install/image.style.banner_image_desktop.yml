@@ -1,0 +1,25 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - crop.type.banner_image_desktop
+  module:
+    - crop
+name: banner_image_desktop
+label: 'Banner image - Desktop'
+effects:
+  43431e3a-7fa8-4c83-8cc5-de573962f9c2:
+    uuid: 43431e3a-7fa8-4c83-8cc5-de573962f9c2
+    id: crop_crop
+    weight: 1
+    data:
+      crop_type: banner_image_desktop
+      automatic_crop_provider: null
+  934e3ede-b744-489e-a310-ca9a55290ffc:
+    uuid: 934e3ede-b744-489e-a310-ca9a55290ffc
+    id: image_scale_and_crop
+    weight: 2
+    data:
+      width: 1920
+      height: 600
+      anchor: center-center

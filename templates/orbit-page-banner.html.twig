@@ -1,0 +1,41 @@
+{{ attach_library('scaffold/page_banner') }}
+{% set classes = [
+    'orbit-banner',
+    colour,
+    size,
+    video ? 'has-video' : 'no-video',
+    image ? 'has-image' : 'no-image'
+] %}
+
+<div{{ attributes.addClass(classes) }}>
+    {% if video or image %}
+        <div class="wrapper">
+
+            {% if video %}
+                {{ video }}
+            {% elseif image %}
+                {{ image }}
+            {% endif %}
+        </div>
+    {% endif %}
+    <div class="inner grid">
+
+        {% if title %}
+
+
+            <h1 class="title">{{ title }}</h1>
+
+        {% endif %}
+
+        {% if description %}
+            <div class="sub-title">{{ description }}</div>
+        {% endif %}
+
+        {% if link %}
+            <div class="link">{{ link }}</div>
+        {% endif %}
+
+
+    </div>
+
+</div>

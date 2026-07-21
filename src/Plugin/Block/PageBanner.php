@@ -51,6 +51,8 @@ class PageBanner extends BlockBase {
         $title = $translated_node->getTitle();
       }
 
+
+
       if (($node->hasField('field_banner_description')) && (!$node->get('field_banner_description')->isEmpty())) {
         $description = $node->get('field_banner_description')->getString();
       }
@@ -145,7 +147,7 @@ class PageBanner extends BlockBase {
 
         // Pass the data to the template.
         return [
-          '#theme' => 'oyster_page_banner',
+          '#theme' => 'orbit_page_banner',
           '#title' => $title,
           '#description' => $description,
           '#size' => $size,
