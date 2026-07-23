@@ -1,0 +1,25 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - crop.type.banner_image_tablet
+  module:
+    - crop
+name: banner_image_tablet_2x
+label: 'Banner image - Tablet 2x'
+effects:
+  8af9f855-64ce-4c8c-9c6a-ca1db909e2e9:
+    uuid: 8af9f855-64ce-4c8c-9c6a-ca1db909e2e9
+    id: crop_crop
+    weight: 1
+    data:
+      crop_type: banner_image_tablet
+      automatic_crop_provider: null
+  f4c4a9e8-5d21-477c-ba16-b41039138169:
+    uuid: f4c4a9e8-5d21-477c-ba16-b41039138169
+    id: image_scale_and_crop
+    weight: 2
+    data:
+      width: 1170
+      height: 900
+      anchor: center-center

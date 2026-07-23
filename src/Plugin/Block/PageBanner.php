@@ -119,7 +119,7 @@ class PageBanner extends BlockBase {
 
       // Generate some image URLs ready for display.
       $desktop_url = ImageStyle::load('banner_image_desktop')->buildUrl($image_uri);
-      $tablet_url = ImageStyle::load('banner_image_desktop')->buildUrl($image_uri);
+      $tablet_url = ImageStyle::load('banner_image_tablet')->buildUrl($image_uri);
       $mobile_url = ImageStyle::load('banner_image_mobile')->buildUrl($image_uri);
     }
     if ($size != 'min') {
@@ -147,7 +147,7 @@ class PageBanner extends BlockBase {
   </picture>',
           [
             '@image_desktop' => $desktop_url,
-            '@image_tablet' => $desktop_url,
+            '@image_tablet' => $tablet_url,
             '@image_mobile' => $mobile_url,
             '@alt' => $alt_text,
           ]

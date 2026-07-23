@@ -2,13 +2,13 @@
   position: relative;
   overflow: hidden;
   height: 266px;
-  @media (min-width: 400px) {
+  @media (min-width: 450px) {
     height: 450px;
   }
 
-    @media (min-width: 768px) {
-      height: 600px;
-    }
+  @media (min-width: 818px) {
+    height: 600px;
+  }
 
   picture,
   img {

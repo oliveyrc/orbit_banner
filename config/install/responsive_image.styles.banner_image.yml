@@ -6,6 +6,8 @@ dependencies:
     - image.style.banner_image_desktop_2x
     - image.style.banner_image_mobile
     - image.style.banner_image_mobile_2x
+    - image.style.banner_image_tablet
+    - image.style.banner_image_tablet_2x
   theme:
     - scaffold
 id: banner_image
@@ -14,11 +16,21 @@ image_style_mappings:
   -
     image_mapping_type: image_style
     image_mapping: banner_image_desktop
-    breakpoint_id: scaffold.tablet
+    breakpoint_id: scaffold.laptop
     multiplier: 1x
   -
     image_mapping_type: image_style
     image_mapping: banner_image_desktop_2x
+    breakpoint_id: scaffold.laptop
+    multiplier: 2x
+  -
+    image_mapping_type: image_style
+    image_mapping: banner_image_tablet
+    breakpoint_id: scaffold.tablet
+    multiplier: 1x
+  -
+    image_mapping_type: image_style
+    image_mapping: banner_image_tablet_2x
     breakpoint_id: scaffold.tablet
     multiplier: 2x
   -

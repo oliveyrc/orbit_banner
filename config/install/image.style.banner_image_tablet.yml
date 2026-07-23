@@ -1,0 +1,25 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - crop.type.banner_image_tablet
+  module:
+    - crop
+name: banner_image_tablet
+label: 'Banner image - Tablet'
+effects:
+  6c520215-ce99-462f-bacd-14874ba8b17c:
+    uuid: 6c520215-ce99-462f-bacd-14874ba8b17c
+    id: crop_crop
+    weight: 1
+    data:
+      crop_type: banner_image_tablet
+      automatic_crop_provider: null
+  758fb626-db81-46aa-aeef-6db2239ae77d:
+    uuid: 758fb626-db81-46aa-aeef-6db2239ae77d
+    id: image_scale_and_crop
+    weight: 2
+    data:
+      width: 585
+      height: 450
+      anchor: center-center
