@@ -7,35 +7,36 @@
     image ? 'has-image' : 'no-image'
 ] %}
 
-<div{{ attributes.addClass(classes) }}>
-    {% if video or image %}
-        <div class="wrapper">
+<div{{attributes.addClass(classes)}}>
 
-            {% if video %}
-                {{ video }}
-            {% elseif image %}
-                {{ image }}
-            {% endif %}
-        </div>
-    {% endif %}
-    <div class="inner grid">
+	{% if video or image %}
+		<div class="wrapper">
 
-        {% if title %}
+			{% if video %}
+				{{ video }}
+			{% elseif image %}
+				{{ image }}
+			{% endif %}
+		</div>
+	{% endif %}
+	<div class="inner grid">
 
-
-            <h1 class="title">{{ title }}</h1>
-
-        {% endif %}
-
-        {% if description %}
-            <div class="sub-title">{{ description }}</div>
-        {% endif %}
-
-        {% if link %}
-            <div class="link">{{ link }}</div>
-        {% endif %}
+		{% if title %}
 
 
-    </div>
+			<h1 class="title">{{ title }}</h1>
+
+		{% endif %}
+
+		{% if description %}
+			<div class="sub-title">{{ description }}</div>
+		{% endif %}
+
+		{% if link %}
+			<div class="link">{{ link }}</div>
+		{% endif %}
+
+
+	</div>
 
 </div>

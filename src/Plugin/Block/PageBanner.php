@@ -51,8 +51,6 @@ class PageBanner extends BlockBase {
         $title = $translated_node->getTitle();
       }
 
-
-
       if (($node->hasField('field_banner_description')) && (!$node->get('field_banner_description')->isEmpty())) {
         $description = $node->get('field_banner_description')->getString();
       }
@@ -68,8 +66,8 @@ class PageBanner extends BlockBase {
       }
 
       // Does this node have the banner image and its set.
-      if ($node->hasField('field_banner_image') && (!($node->get('field_banner_image')->isEmpty()))) {
-        $media = Media::load($node->get('field_banner_image')->first()->getValue()['target_id']);
+      if ($node->hasField('field_orbit_banner_image') && (!($node->get('field_orbit_banner_image')->isEmpty()))) {
+        $media = Media::load($node->get('field_orbit_banner_image')->first()->getValue()['target_id']);
         if ($media) {
           $file = File::load($media->getSource()->getSourceFieldValue($media));
           if ($file) {
@@ -78,10 +76,10 @@ class PageBanner extends BlockBase {
           }
         }
       } // See if there a default image for the field.
-      elseif ($node->hasField('field_banner_image')) {
+      elseif ($node->hasField('field_orbit_banner_image')) {
         $definitions = \Drupal::service('entity_field.manager')->getFieldDefinitions('node', $node->getType());
-        $default_value = $definitions['field_banner_image']->getDefaultValueLiteral();
-        // Use the default field iamge.
+        $default_value = $definitions['field_orbit_banner_image']->getDefaultValueLiteral();
+        // Use the default field image.
         if (!empty($default_value)) {
           $media_id = \Drupal::entityTypeManager()->getStorage('media')->loadByProperties(['uuid' => $default_value[0]['target_uuid']]);
           $media_id = current($media_id)->id();
@@ -93,7 +91,7 @@ class PageBanner extends BlockBase {
           // Use the node specified image.
           $site_settings = \Drupal::service('plugin.manager.site_settings_loader')->getActiveLoaderPlugin();
           $settings = current($site_settings->loadByGroup('banners'));
-          $banner = $settings->get('field_banner_image')->first()->getValue();
+          $banner = $settings->get('field_orbit_banner_image')->first()->getValue();
           $media = Media::load($banner['target_id']);
           $file = File::load($media->getSource()->getSourceFieldValue($media));
           $image_uri = $file->getFileUri();
@@ -118,10 +116,11 @@ class PageBanner extends BlockBase {
     }
 
     if ($image_uri) {
+
       // Generate some image URLs ready for display.
-      $desktop_url = ImageStyle::load('page_banner')->buildUrl($image_uri);
-      $tablet_url = ImageStyle::load('page_banner_tablet')->buildUrl($image_uri);
-      $mobile_url = ImageStyle::load('page_banner_mobile')->buildUrl($image_uri);
+      $desktop_url = ImageStyle::load('banner_image_desktop')->buildUrl($image_uri);
+      $tablet_url = ImageStyle::load('banner_image_desktop')->buildUrl($image_uri);
+      $mobile_url = ImageStyle::load('banner_image_mobile')->buildUrl($image_uri);
     }
     if ($size != 'min') {
       if ($show_video) {
@@ -138,20 +137,31 @@ class PageBanner extends BlockBase {
         ];
 
       } else {
-        $picture = new FormattableMarkup('<img loading="eager" alt="@alt" src="@image_desktop"  srcset="@image_mobile 480w, @image_tablet 768w, @image_desktop 1200w" />', [
-          '@image_desktop' => $desktop_url,
-          '@image_tablet' => $tablet_url,
-          '@image_mobile' => $mobile_url,
-          '@alt' => $alt_text,
-        ]);
+       $picture = FALSE;
+      if ($desktop_url) {
+        $image = new FormattableMarkup(
+          '<picture>
+    <source media="(max-width: 480px)" srcset="@image_mobile">
+    <source media="(max-width: 768px)" srcset="@image_tablet">
+    <img loading="eager" alt="@alt" src="@image_desktop">
+  </picture>',
+          [
+            '@image_desktop' => $desktop_url,
+            '@image_tablet' => $desktop_url,
+            '@image_mobile' => $mobile_url,
+            '@alt' => $alt_text,
+          ]
+        );
 
+
+      }
         // Pass the data to the template.
         return [
           '#theme' => 'orbit_page_banner',
           '#title' => $title,
           '#description' => $description,
           '#size' => $size,
-          '#image' => $picture,
+          '#image' => $image,
           '#link' => $link,
           '#video' => NULL,
           '#poster' => $poster,
