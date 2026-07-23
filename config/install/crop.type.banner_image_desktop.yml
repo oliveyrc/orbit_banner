@@ -1,0 +1,11 @@
+langcode: en
+status: true
+dependencies: {  }
+label: 'Banner image - Desktop'
+id: banner_image_desktop
+description: 'Banner image crop used on large sized screens.'
+aspect_ratio: '1920:600'
+soft_limit_width: null
+soft_limit_height: null
+hard_limit_width: 1920
+hard_limit_height: 600

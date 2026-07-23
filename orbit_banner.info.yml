@@ -9,3 +9,4 @@ dependencies:
   - media_library_edit:media_library_edit
   - field_group:field_group
   - orbit_media:orbit_media
+  - site_settings:site_settings

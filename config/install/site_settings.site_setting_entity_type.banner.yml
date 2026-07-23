@@ -1,0 +1,9 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - site_settings.site_setting_group_entity_type.defaults
+id: banner
+label: Banner
+group: defaults
+multiple: false

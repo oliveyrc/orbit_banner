@@ -1,0 +1,25 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - crop.type.banner_image_mobile
+  module:
+    - crop
+name: banner_image_mobile_2x
+label: 'Banner image - Mobile 2x'
+effects:
+  025eca8d-ff94-427c-b551-d0604cf065ee:
+    uuid: 025eca8d-ff94-427c-b551-d0604cf065ee
+    id: crop_crop
+    weight: 1
+    data:
+      crop_type: banner_image_mobile
+      automatic_crop_provider: null
+  2bab281a-359b-43e6-a93e-6592ed1ad79e:
+    uuid: 2bab281a-359b-43e6-a93e-6592ed1ad79e
+    id: image_scale_and_crop
+    weight: 2
+    data:
+      width: 800
+      height: 532
+      anchor: center-center

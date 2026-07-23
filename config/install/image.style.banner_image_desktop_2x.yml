@@ -1,0 +1,25 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - crop.type.banner_image_desktop
+  module:
+    - crop
+name: banner_image_desktop_2x
+label: 'Banner image - Desktop 2x'
+effects:
+  2bf12e8b-44dc-4ce6-bd42-c90f7543015b:
+    uuid: 2bf12e8b-44dc-4ce6-bd42-c90f7543015b
+    id: crop_crop
+    weight: 1
+    data:
+      crop_type: banner_image_desktop
+      automatic_crop_provider: null
+  b5fc58cd-bee5-44b0-82e6-64eb5bed4dff:
+    uuid: b5fc58cd-bee5-44b0-82e6-64eb5bed4dff
+    id: image_scale_and_crop
+    weight: 2
+    data:
+      width: 3840
+      height: 1200
+      anchor: center-center
