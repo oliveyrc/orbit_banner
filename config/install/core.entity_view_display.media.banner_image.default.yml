@@ -3,21 +3,21 @@ status: true
 dependencies:
   config:
     - field.field.media.banner_image.field_media_image
-    - image.style.large
     - media.type.banner_image
+    - responsive_image.styles.banner_image
   module:
-    - image
+    - responsive_image
 id: media.banner_image.default
 targetEntityType: media
 bundle: banner_image
 mode: default
 content:
   field_media_image:
-    type: image
-    label: visually_hidden
+    type: responsive_image
+    label: hidden
     settings:
+      responsive_image_style: banner_image
       image_link: ''
-      image_style: large
       image_loading:
         attribute: lazy
     third_party_settings: {  }

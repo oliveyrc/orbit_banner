@@ -1,3 +1,5 @@
+uuid: ec18c88f-d08d-411d-bd5f-5aa1b99b1f47
+langcode: en
 status: true
 dependencies:
   config:
@@ -7,6 +9,8 @@ dependencies:
   module:
     - image_widget_crop
     - path
+_core:
+  default_config_hash: 5-jV2_DJT1uQw29pDgTiS8UwAK7WL_yKnKjF9qe6oGc
 id: media.banner_image.default
 targetEntityType: media
 bundle: banner_image
@@ -29,6 +33,7 @@ content:
       crop_list:
         - banner_image_desktop
         - banner_image_mobile
+        - banner_image_tablet
       crop_types_required: {  }
       warn_multiple_usages: true
       show_crop_area: false
