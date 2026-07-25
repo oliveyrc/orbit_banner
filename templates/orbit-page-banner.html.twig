@@ -10,24 +10,14 @@
 
 <div{{attributes.addClass(classes)}}>
 
-	{% if video or image %}
+
 <div class="image">
-
-
-			{% if video %}
-				{{ video }}
-			{% elseif image %}
 				{{ image }}
-			{% endif %}
 </div>
-	{% endif %}
+
 	<div class="inner grid">
-
 		{% if title %}
-
-
 			<h1 class="title">{{ title }}</h1>
-
 		{% endif %}
 
 		{% if description %}

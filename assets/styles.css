@@ -45,4 +45,53 @@
       color: white;
       margin: 0;
     }
+
+
+         video {
+           object-fit: cover;
+           height: 100%;
+           width: 100%;position: absolute;
+            inset: 0;
+         }
+
+
+         button {
+           cursor: pointer;
+         }
+
+         .controls {
+           position: absolute;
+           top: 30px;
+           left: 20px;
+           background-color: $midnight_blue;
+           border-radius: 50%;
+           width: 60px;
+           height: 60px;
+           display: flex;
+           align-items: center;
+           justify-content: center;
+
+           @include media($tab) {
+             top: 40px;
+           }
+
+         }
+
+         button {
+           border: 0;
+           background: none;
+
+           i {
+             color: $white;
+             font-size: 20px;
+           }
+
+           &[aria-pressed="true"] {
+             i {
+               &::before {
+                 content: '\f04b';
+               }
+             }
+           }
+         }
 }
