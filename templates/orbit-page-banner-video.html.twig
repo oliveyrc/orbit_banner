@@ -1,5 +1,5 @@
 {{ attach_library('orbit_banner/base') }}
-{{ attach_library('scaffold/page_banner.video') }}
+{# {{ attach_library('scaffold/page_banner.video') }} #}
 {% set classes = [
     'orbit-banner',
     colour,
@@ -8,7 +8,7 @@
 
 <div{{attributes.addClass(classes)}}>
 	<div class="wrapper image">
-		<video id="banner-video" poster="{{ poster }}" loop autoplay muted playsinline defaultmuted {% if aria_label %} aria-label="{{ aria_label }}" {% endif %}>
+		<video id="banner-video" poster="{{ poster }}" loop autoplay muted playsinline defaultmuted {% if aria_label %}aria-label="{{ aria_label }}"{% endif %}>
 			<source src="{{ video_url }}" type="video/mp4">
 		</video>
 	</div>
@@ -25,13 +25,15 @@
 			<div class="link">{{ link }}</div>
 		{% endif %}
 		<div class="controls">
-			<button role="button" aria-pressed="false">
-				<i class="fas fa-pause"></i>
-				<span class="visually-hidden">{{ 'Pause
-          video'|t }}</span>
+			<button type="button" class="play-pause-toggle" aria-label="Play" aria-pressed="false">
+				<svg class="icon-play" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<path d="M6 4L19 12L6 20V4Z" fill="currentColor" />
+				</svg>
+				<svg class="icon-pause" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" hidden>
+					<rect x="6" y="4" width="4" height="16" rx="1" fill="currentColor" />
+					<rect x="14" y="4" width="4" height="16" rx="1" fill="currentColor" />
+				</svg>
 			</button>
 		</div>
 	</div>
-
-
 </div>

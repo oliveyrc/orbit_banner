@@ -1,5 +1,10 @@
 base:
   version: 1.0.0
+  js:
+    assets/video.js: {}
+  dependencies:
+    - core/drupal
+    - core/once
   css:
     theme:
       assets/styles.css: {}
