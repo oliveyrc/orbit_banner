@@ -2,13 +2,14 @@
   position: relative;
   overflow: hidden;
   height: 266px;
+
   @media (min-width: 400px) {
     height: 450px;
   }
 
-    @media (min-width: 768px) {
-      height: 600px;
-    }
+  @media (min-width: 768px) {
+    height: 600px;
+  }
 
   picture,
   img {
@@ -21,77 +22,62 @@
   }
 
   .image {
-    &::after{
+    &::after {
       background-image: linear-gradient(rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.25));
       position: absolute;
       inset: 0;
       z-index: 0;
-      content: '';
+      content: "";
     }
   }
-    .inner {
-      position: relative;
-      z-index: 1;
-      padding: 1rem;
-      height: 100%;
-      display: flex;
-      align-items: flex-end;
-      @media (min-width: 768px) {
-        padding: 2rem;
-      }
-    }
 
-    h1 {
+  .inner {
+    position: relative;
+    z-index: 1;
+    padding: 1rem;
+    height: 100%;
+    display: flex;
+    align-items: flex-end;
+
+    @media (min-width: 768px) {
+      padding: 2rem;
+    }
+  }
+
+  h1 {
+    color: white;
+    margin: 0;
+  }
+
+  video {
+    object-fit: cover;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    inset: 0;
+  }
+
+  button {
+    cursor: pointer;
+    border: 0;
+    background: white;
+    display: flex;
+    width: 50px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+      background-color: black;
       color: white;
-      margin: 0;
     }
+  }
 
-
-         video {
-           object-fit: cover;
-           height: 100%;
-           width: 100%;position: absolute;
-            inset: 0;
-         }
-
-
-         button {
-           cursor: pointer;
-         }
-
-         .controls {
-           position: absolute;
-           top: 30px;
-           left: 20px;
-           background-color: $midnight_blue;
-           border-radius: 50%;
-           width: 60px;
-           height: 60px;
-           display: flex;
-           align-items: center;
-           justify-content: center;
-
-           @include media($tab) {
-             top: 40px;
-           }
-
-         }
-
-         button {
-           border: 0;
-           background: none;
-
-           i {
-             color: $white;
-             font-size: 20px;
-           }
-
-           &[aria-pressed="true"] {
-             i {
-               &::before {
-                 content: '\f04b';
-               }
-             }
-           }
-         }
+  .controls {
+    position: absolute;
+    bottom: 40px;
+      right: 20px;
+  }
 }
+
