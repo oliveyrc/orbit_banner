@@ -1,7 +1,6 @@
 {
     "name": "oliveyrc/orbit_banner",
     "description": "Provides a banner block, with images, video, title, text and link.",
-    
     "type": "drupal-module",
     "authors": [
         {
@@ -13,5 +12,23 @@
     "support": {
         "issues": "https://github.com/oliveyrc/orbit_banner/issues",
         "source": "https://github.com/oliveyrc/orbit_banner"
-    }
+    },
+    "require": {
+        "nolimits4web/swiper": "^11.2"
+    },
+    "repositories": [
+        {
+            "type": "package",
+            "package": {
+                "name": "nolimits4web/swiper",
+                "version": "11.2.10",
+                "type": "drupal-library",
+                "license": "MIT",
+                "dist": {
+                    "type": "tar",
+                    "url": "https://registry.npmjs.org/swiper/-/swiper-11.2.10.tgz"
+                }
+            }
+        }
+    ]
 }

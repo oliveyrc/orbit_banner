@@ -1,33 +1,56 @@
-
+{#
+/**
+ * @file
+ * Default theme implementation for a single image page banner.
+ *
+ * Available variables:
+ * - title: The banner heading.
+ * - description: The banner sub heading.
+ * - link: A render array for the banner call to action.
+ * - image: A render array for the banner image.
+ * - colour: A validated hex colour used to tint the overlay, or NULL.
+ * - size: One of 'small', 'medium', 'large', or an empty string.
+ * - parallax: TRUE when the media should scroll at a slower rate.
+ * - no_h1: TRUE when the title should not be rendered as an h1.
+ *
+ * @ingroup themeable
+ */
+#}
 {{ attach_library('orbit_banner/base') }}
-{% set classes = [
+{%
+  set classes = [
     'orbit-banner',
-    colour,
     size,
-    image ? 'has-image' : 'no-image'
-] %}
+    parallax ? 'has-parallax',
+    image ? 'has-image' : 'no-image',
+    colour ? 'has-colour',
+  ]
+%}
+{% if colour %}
+  {% set attributes = attributes.setAttribute('style', '--orbit-banner-colour: ' ~ colour) %}
+{% endif %}
+<div{{ attributes.addClass(classes) }}>
+  {% if image %}
+    <div class="image" data-orbit-banner-media>
+      {{ image }}
+    </div>
+  {% endif %}
 
-<div{{attributes.addClass(classes)}}>
+  <div class="inner grid">
+    {% if title %}
+      {% if no_h1 %}
+        <div class="title">{{ title }}</div>
+      {% else %}
+        <h1 class="title">{{ title }}</h1>
+      {% endif %}
+    {% endif %}
 
+    {% if description %}
+      <div class="sub-title">{{ description }}</div>
+    {% endif %}
 
-<div class="image">
-				{{ image }}
-</div>
-
-	<div class="inner grid">
-		{% if title %}
-			<h1 class="title">{{ title }}</h1>
-		{% endif %}
-
-		{% if description %}
-			<div class="sub-title">{{ description }}</div>
-		{% endif %}
-
-		{% if link %}
-			<div class="link">{{ link }}</div>
-		{% endif %}
-
-
-	</div>
-
+    {% if link %}
+      <div class="link">{{ link }}</div>
+    {% endif %}
+  </div>
 </div>

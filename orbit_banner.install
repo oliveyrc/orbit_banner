@@ -5,45 +5,56 @@
  * Provides install functionality for the Orbit Banner module.
  */
 
+declare(strict_types=1);
+
+use Drupal\Core\Config\FileStorage;
+use Drupal\Core\Utility\UpdateException;
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
+
 /**
  * Implements hook_install().
  */
 function orbit_banner_install(): void {
-	_orbit_banner_apply_page_banner_field_group();
+  _orbit_banner_apply_page_banner_field_group();
 }
 
 /**
- * Adds the Banner field group to the Page node form display.
+ * Returns the banner form display components, keyed by field name.
  */
-function _orbit_banner_apply_page_banner_field_group(): void {
-	if (!\Drupal::moduleHandler()->moduleExists('field_group')) {
-		return;
-	}
+function _orbit_banner_page_banner_components(): array {
+  $media_library_widget = [
+    'type' => 'media_library_widget',
+    'region' => 'content',
+    'settings' => [
+      'media_types' => [],
+    ],
+    'third_party_settings' => [
+      'media_library_edit' => [
+        'show_edit' => TRUE,
+        'edit_form_mode' => 'default',
+      ],
+    ],
+  ];
 
-	$form_display = \Drupal::service('entity_display.repository')
-		->getFormDisplay('node', 'basic_page', 'default');
-
-	$field_definitions = \Drupal::service('entity_field.manager')
-		->getFieldDefinitions('node', 'basic_page');
-
-	$banner_components = [
-		'field_orbit_banner_help' => [
-			'type' => 'markup',
-			'weight' => 10,
-			'region' => 'content',
-			'settings' => [],
-			'third_party_settings' => [],
-		],
-		'field_orbit_banner_title' => [
-			'type' => 'string_textfield',
-			'weight' => 11,
-			'region' => 'content',
-			'settings' => [
-				'size' => 60,
-				'placeholder' => '',
-			],
-			'third_party_settings' => [],
-		],
+  return [
+    'field_orbit_banner_help' => [
+      'type' => 'markup',
+      'weight' => 10,
+      'region' => 'content',
+      'settings' => [],
+      'third_party_settings' => [],
+    ],
+    'field_orbit_banner_title' => [
+      'type' => 'string_textfield',
+      'weight' => 11,
+      'region' => 'content',
+      'settings' => [
+        'size' => 60,
+        'placeholder' => '',
+      ],
+      'third_party_settings' => [],
+    ],
     'field_orbit_banner_text' => [
       'type' => 'text_textarea',
       'weight' => 12,
@@ -54,97 +65,158 @@ function _orbit_banner_apply_page_banner_field_group(): void {
       ],
       'third_party_settings' => [],
     ],
-		'field_orbit_banner_image' => [
-			'type' => 'media_library_widget',
-			'weight' => 13,
-			'region' => 'content',
-			'settings' => [
-				'media_types' => [],
-			],
-			'third_party_settings' => [
-				'media_library_edit' => [
-					'show_edit' => TRUE,
-					'edit_form_mode' => 'default',
-				],
-			],
-		],
-		'field_orbit_banner_video' => [
-			'type' => 'media_library_widget',
-			'weight' => 14,
-			'region' => 'content',
-			'settings' => [
-				'media_types' => [],
-			],
-			'third_party_settings' => [
-				'media_library_edit' => [
-					'show_edit' => TRUE,
-					'edit_form_mode' => 'default',
-				],
-			],
-		],
-		'field_orbit_banner_size' => [
-			'type' => 'options_select',
-			'weight' => 15,
-			'region' => 'content',
-			'settings' => [],
-			'third_party_settings' => [],
-		],
-		'field_orbit_banner_colour' => [
-			'type' => 'color_field_widget_box',
-			'weight' => 16,
-			'region' => 'content',
-			'settings' => [
-				'default_colors' => "#ac725e,#d06b64,#f83a22,#fa573c,#ff7537,#ffad46\n#42d692,#16a765,#7bd148,#b3dc6c,#fbe983\n#92e1c0,#9fe1e7,#9fc6e7,#4986e7,#9a9cff\n#b99aff,#c2c2c2,#cabdbf,#cca6ac,#f691b2\n#cd74e6,#a47ae2",
-			],
-			'third_party_settings' => [],
-		],
-	];
+    'field_orbit_banner_image' => ['weight' => 13] + $media_library_widget,
+    'field_orbit_banner_effect' => [
+      'type' => 'options_select',
+      'weight' => 14,
+      'region' => 'content',
+      'settings' => [],
+      'third_party_settings' => [],
+    ],
+    'field_orbit_banner_video' => ['weight' => 15] + $media_library_widget,
+    'field_orbit_banner_size' => [
+      'type' => 'options_select',
+      'weight' => 16,
+      'region' => 'content',
+      'settings' => [],
+      'third_party_settings' => [],
+    ],
+    'field_orbit_banner_parallax' => [
+      'type' => 'boolean_checkbox',
+      'weight' => 17,
+      'region' => 'content',
+      'settings' => [
+        'display_label' => TRUE,
+      ],
+      'third_party_settings' => [],
+    ],
+    'field_orbit_banner_colour' => [
+      'type' => 'color_field_widget_box',
+      'weight' => 18,
+      'region' => 'content',
+      'settings' => [
+        'default_colors' => "#ac725e,#d06b64,#f83a22,#fa573c,#ff7537,#ffad46\n#42d692,#16a765,#7bd148,#b3dc6c,#fbe983\n#92e1c0,#9fe1e7,#9fc6e7,#4986e7,#9a9cff\n#b99aff,#c2c2c2,#cabdbf,#cca6ac,#f691b2\n#cd74e6,#a47ae2",
+      ],
+      'third_party_settings' => [],
+    ],
+  ];
+}
 
-	$group_banner_children = [];
+/**
+ * Adds the Banner field group to the Page node form display.
+ */
+function _orbit_banner_apply_page_banner_field_group(): void {
+  if (!\Drupal::moduleHandler()->moduleExists('field_group')) {
+    return;
+  }
 
-	foreach ($banner_components as $field_name => $component) {
-		if (!isset($field_definitions[$field_name])) {
-			continue;
-		}
+  $form_display = \Drupal::service('entity_display.repository')
+    ->getFormDisplay('node', 'basic_page', 'default');
 
-		$form_display->setComponent($field_name, $component);
-		$group_banner_children[] = $field_name;
-	}
+  $field_definitions = \Drupal::service('entity_field.manager')
+    ->getFieldDefinitions('node', 'basic_page');
 
-	$form_display->setThirdPartySetting('field_group', 'group_tabs', [
-		'children' => ['group_banner'],
-		'label' => 'Tabs',
-		'region' => 'content',
-		'parent_name' => '',
-		'weight' => 7,
-		'format_type' => 'tabs',
-		'format_settings' => [
-			'classes' => '',
-			'show_empty_fields' => FALSE,
-			'id' => '',
-			'label_as_html' => FALSE,
-			'direction' => 'vertical',
-			'width_breakpoint' => 640,
-		],
-	]);
+  $group_banner_children = [];
 
-	$form_display->setThirdPartySetting('field_group', 'group_banner', [
-		'children' => $group_banner_children,
-		'label' => 'Banner',
-		'region' => 'content',
-		'parent_name' => 'group_tabs',
-		'weight' => 6,
-		'format_type' => 'tab',
-		'format_settings' => [
-			'classes' => '',
-			'show_empty_fields' => FALSE,
-			'id' => '',
-			'label_as_html' => FALSE,
-			'formatter' => 'closed',
-			'description' => '',
-			'required_fields' => TRUE,
-		],
-	]);
+  foreach (_orbit_banner_page_banner_components() as $field_name => $component) {
+    if (!isset($field_definitions[$field_name])) {
+      continue;
+    }
 
-	$form_display->save();
+    $form_display->setComponent($field_name, $component);
+    $group_banner_children[] = $field_name;
+  }
+
+  $form_display->setThirdPartySetting('field_group', 'group_tabs', [
+    'children' => ['group_banner'],
+    'label' => 'Tabs',
+    'region' => 'content',
+    'parent_name' => '',
+    'weight' => 7,
+    'format_type' => 'tabs',
+    'format_settings' => [
+      'classes' => '',
+      'show_empty_fields' => FALSE,
+      'id' => '',
+      'label_as_html' => FALSE,
+      'direction' => 'vertical',
+      'width_breakpoint' => 640,
+    ],
+  ]);
+
+  $form_display->setThirdPartySetting('field_group', 'group_banner', [
+    'children' => $group_banner_children,
+    'label' => 'Banner',
+    'region' => 'content',
+    'parent_name' => 'group_tabs',
+    'weight' => 6,
+    'format_type' => 'tab',
+    'format_settings' => [
+      'classes' => '',
+      'show_empty_fields' => FALSE,
+      'id' => '',
+      'label_as_html' => FALSE,
+      'formatter' => 'closed',
+      'description' => '',
+      'required_fields' => TRUE,
+    ],
+  ]);
+
+  $form_display->save();
+}
+
+/**
+ * Creates a field from this module's config/install directory, if missing.
+ *
+ * The entity storage handlers are used rather than Entity::create() so that
+ * the stored representation of type specific settings is decoded the same way
+ * the config system decodes it. Notably, list fields keep 'allowed_values' as
+ * a value => label map in memory and only structure it on save, so passing the
+ * structured record straight to create() would double encode it.
+ */
+function _orbit_banner_install_field(string $field_name, string $bundle = 'basic_page'): void {
+  $source = \Drupal::service('extension.list.module')->getPath('orbit_banner') . '/config/install';
+  $file_storage = new FileStorage($source);
+  $entity_type_manager = \Drupal::entityTypeManager();
+
+  if (!FieldStorageConfig::loadByName('node', $field_name)) {
+    $record = $file_storage->read("field.storage.node.$field_name");
+
+    if (!$record) {
+      throw new UpdateException("Missing field storage config for $field_name.");
+    }
+
+    $entity_type_manager->getStorage('field_storage_config')
+      ->createFromStorageRecord($record)
+      ->save();
+  }
+
+  if (!FieldConfig::loadByName('node', $bundle, $field_name)) {
+    $record = $file_storage->read("field.field.node.$bundle.$field_name");
+
+    if (!$record) {
+      throw new UpdateException("Missing field config for $field_name.");
+    }
+
+    $entity_type_manager->getStorage('field_config')
+      ->createFromStorageRecord($record)
+      ->save();
+  }
+}
+
+/**
+ * Allows multiple banner images and adds the effect and parallax fields.
+ */
+function orbit_banner_update_11001(): void {
+  $image_storage = FieldStorageConfig::loadByName('node', 'field_orbit_banner_image');
+
+  if ($image_storage && $image_storage->getCardinality() !== FieldStorageConfig::CARDINALITY_UNLIMITED) {
+    $image_storage->setCardinality(FieldStorageConfig::CARDINALITY_UNLIMITED)->save();
+  }
+
+  _orbit_banner_install_field('field_orbit_banner_effect');
+  _orbit_banner_install_field('field_orbit_banner_parallax');
+
+  // Place the new fields on the Banner tab.
+  _orbit_banner_apply_page_banner_field_group();
 }

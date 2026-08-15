@@ -9,8 +9,8 @@ id: node.basic_page.field_orbit_banner_image
 field_name: field_orbit_banner_image
 entity_type: node
 bundle: basic_page
-label: Image
-description: ''
+label: Images
+description: 'Add more than one image to turn the banner into a slideshow. The first image is used as the video poster frame.'
 required: false
 translatable: false
 default_value: {  }

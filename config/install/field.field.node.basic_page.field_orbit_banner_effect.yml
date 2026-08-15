@@ -1,0 +1,22 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_orbit_banner_effect
+    - node.type.basic_page
+  module:
+    - options
+id: node.basic_page.field_orbit_banner_effect
+field_name: field_orbit_banner_effect
+entity_type: node
+bundle: basic_page
+label: 'Transition effect'
+description: 'How the banner moves between images. Only used when more than one image is added.'
+required: false
+translatable: false
+default_value:
+  -
+    value: slide
+default_value_callback: ''
+settings: {  }
+field_type: list_string

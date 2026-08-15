@@ -18,6 +18,6 @@ default_value: {  }
 default_value_callback: ''
 settings:
   markup:
-    value: '<p>Adding a video will override an image.</p>'
+    value: "<p>Adding a video will override any images.</p>\n<p>Adding more than one image turns the banner into a slideshow. The first image is also used as the poster frame for a video.</p>"
     format: basic_html
 field_type: markup

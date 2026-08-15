@@ -1,10 +1,47 @@
 base:
   version: 1.0.0
+  css:
+    theme:
+      assets/styles.css: {}
+
+video:
+  version: 1.0.0
   js:
     assets/video.js: {}
   dependencies:
     - core/drupal
     - core/once
+    - orbit_banner/base
+
+parallax:
+  version: 1.0.0
+  js:
+    assets/parallax.js: {}
+  dependencies:
+    - core/drupal
+    - core/once
+    - orbit_banner/base
+
+# Attached only when a banner holds more than one image.
+slider:
+  version: 1.0.0
+  js:
+    assets/slider.js: {}
+  dependencies:
+    - core/drupal
+    - core/once
+    - orbit_banner/base
+    - orbit_banner/swiper
+
+swiper:
+  remote: https://github.com/nolimits4web/swiper
+  version: '11.2.10'
+  license:
+    name: MIT
+    url: https://github.com/nolimits4web/swiper/blob/main/LICENSE
+    gpl-compatible: true
+  js:
+    /libraries/swiper/swiper-bundle.min.js: { minified: true, preprocess: false }
   css:
     theme:
-      assets/styles.css: {}
+      /libraries/swiper/swiper-bundle.min.css: { minified: true, preprocess: false }

@@ -1,39 +1,86 @@
+{#
+/**
+ * @file
+ * Default theme implementation for a video page banner.
+ *
+ * Available variables:
+ * - title: The banner heading.
+ * - description: The banner sub heading.
+ * - link: A render array for the banner call to action.
+ * - video_url: The absolute URL of the video file.
+ * - video_id: A unique DOM id for the video element.
+ * - poster: The URL of the first banner image, used as the poster frame.
+ * - aria_label: An accessible name for the video element.
+ * - colour: A validated hex colour used to tint the overlay, or NULL.
+ * - size: One of 'small', 'medium', 'large', or an empty string.
+ * - parallax: TRUE when the media should scroll at a slower rate.
+ * - no_h1: TRUE when the title should not be rendered as an h1.
+ *
+ * @ingroup themeable
+ */
+#}
 {{ attach_library('orbit_banner/base') }}
-{# {{ attach_library('scaffold/page_banner.video') }} #}
-{% set classes = [
+{%
+  set classes = [
     'orbit-banner',
-    colour,
-    size
-] %}
+    'orbit-banner--video',
+    size,
+    parallax ? 'has-parallax',
+    'has-image',
+    colour ? 'has-colour',
+  ]
+%}
+{% if colour %}
+  {% set attributes = attributes.setAttribute('style', '--orbit-banner-colour: ' ~ colour) %}
+{% endif %}
+<div{{ attributes.addClass(classes) }}>
+  <div class="wrapper image" data-orbit-banner-media>
+    <video
+      id="{{ video_id }}"
+      class="orbit-banner__video"
+      {% if poster %}poster="{{ poster }}"{% endif %}
+      loop
+      muted
+      playsinline
+      preload="metadata"
+      {% if aria_label %}aria-label="{{ aria_label }}"{% endif %}>
+      <source src="{{ video_url }}" type="video/mp4">
+    </video>
+  </div>
 
-<div{{attributes.addClass(classes)}}>
-	<div class="wrapper image">
-		<video id="banner-video" poster="{{ poster }}" loop autoplay muted playsinline defaultmuted {% if aria_label %}aria-label="{{ aria_label }}"{% endif %}>
-			<source src="{{ video_url }}" type="video/mp4">
-		</video>
-	</div>
-	<div class="inner grid">
-		{% if title %}
-			<h1 class="title">{{ title }}</h1>
-		{% endif %}
+  <div class="inner grid">
+    {% if title %}
+      {% if no_h1 %}
+        <div class="title">{{ title }}</div>
+      {% else %}
+        <h1 class="title">{{ title }}</h1>
+      {% endif %}
+    {% endif %}
 
-		{% if description %}
-			<div class="sub-title">{{ description }}</div>
-		{% endif %}
+    {% if description %}
+      <div class="sub-title">{{ description }}</div>
+    {% endif %}
 
-		{% if link %}
-			<div class="link">{{ link }}</div>
-		{% endif %}
-		<div class="controls">
-			<button type="button" class="play-pause-toggle" aria-label="Play" aria-pressed="false">
-				<svg class="icon-play" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-					<path d="M6 4L19 12L6 20V4Z" fill="currentColor" />
-				</svg>
-				<svg class="icon-pause" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" hidden>
-					<rect x="6" y="4" width="4" height="16" rx="1" fill="currentColor" />
-					<rect x="14" y="4" width="4" height="16" rx="1" fill="currentColor" />
-				</svg>
-			</button>
-		</div>
-	</div>
+    {% if link %}
+      <div class="link">{{ link }}</div>
+    {% endif %}
+
+    <div class="controls">
+      <button
+        type="button"
+        class="play-pause-toggle orbit-banner__video-toggle"
+        aria-controls="{{ video_id }}"
+        aria-label="{{ 'Play video'|t }}"
+        data-label-play="{{ 'Play video'|t }}"
+        data-label-pause="{{ 'Pause video'|t }}">
+        <svg class="icon-play" width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+          <path d="M6 4L19 12L6 20V4Z" fill="currentColor" />
+        </svg>
+        <svg class="icon-pause" width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" hidden>
+          <rect x="6" y="4" width="4" height="16" rx="1" fill="currentColor" />
+          <rect x="14" y="4" width="4" height="16" rx="1" fill="currentColor" />
+        </svg>
+      </button>
+    </div>
+  </div>
 </div>

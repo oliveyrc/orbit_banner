@@ -1,0 +1,110 @@
+{#
+/**
+ * @file
+ * Default theme implementation for a multi image page banner.
+ *
+ * Rendered when more than one banner image is added. The Swiper markup and
+ * libraries are only used by this template.
+ *
+ * Available variables:
+ * - title: The banner heading.
+ * - description: The banner sub heading.
+ * - link: A render array for the banner call to action.
+ * - images: A list of render arrays, one per banner image.
+ * - effect: The Swiper transition, either 'slide' or 'fade'.
+ * - slider_id: A unique DOM id for the Swiper container.
+ * - colour: A validated hex colour used to tint the overlay, or NULL.
+ * - size: One of 'small', 'medium', 'large', or an empty string.
+ * - parallax: TRUE when the media should scroll at a slower rate.
+ * - no_h1: TRUE when the title should not be rendered as an h1.
+ *
+ * @ingroup themeable
+ */
+#}
+{{ attach_library('orbit_banner/base') }}
+{%
+  set classes = [
+    'orbit-banner',
+    'orbit-banner--slider',
+    size,
+    parallax ? 'has-parallax',
+    'has-image',
+    colour ? 'has-colour',
+  ]
+%}
+{% if colour %}
+  {% set attributes = attributes.setAttribute('style', '--orbit-banner-colour: ' ~ colour) %}
+{% endif %}
+<div{{ attributes.addClass(classes) }}>
+  <div class="image" data-orbit-banner-media>
+    <div
+      id="{{ slider_id }}"
+      class="swiper orbit-banner__swiper"
+      data-orbit-banner-slider
+      data-effect="{{ effect }}">
+      <div class="swiper-wrapper">
+        {% for image in images %}
+          <div class="swiper-slide">{{ image }}</div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <div class="inner grid">
+    {% if title %}
+      {% if no_h1 %}
+        <div class="title">{{ title }}</div>
+      {% else %}
+        <h1 class="title">{{ title }}</h1>
+      {% endif %}
+    {% endif %}
+
+    {% if description %}
+      <div class="sub-title">{{ description }}</div>
+    {% endif %}
+
+    {% if link %}
+      <div class="link">{{ link }}</div>
+    {% endif %}
+
+    <div class="controls orbit-banner__slider-controls">
+      <button
+        type="button"
+        class="orbit-banner__nav orbit-banner__nav--prev"
+        aria-controls="{{ slider_id }}"
+        aria-label="{{ 'Previous image'|t }}">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+          <path d="M15 5L8 12L15 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </button>
+
+      <button
+        type="button"
+        class="play-pause-toggle orbit-banner__autoplay-toggle"
+        aria-controls="{{ slider_id }}"
+        aria-label="{{ 'Pause slideshow'|t }}"
+        data-label-play="{{ 'Play slideshow'|t }}"
+        data-label-pause="{{ 'Pause slideshow'|t }}">
+        <svg class="icon-play" width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" hidden>
+          <path d="M6 4L19 12L6 20V4Z" fill="currentColor" />
+        </svg>
+        <svg class="icon-pause" width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+          <rect x="6" y="4" width="4" height="16" rx="1" fill="currentColor" />
+          <rect x="14" y="4" width="4" height="16" rx="1" fill="currentColor" />
+        </svg>
+      </button>
+
+      <button
+        type="button"
+        class="orbit-banner__nav orbit-banner__nav--next"
+        aria-controls="{{ slider_id }}"
+        aria-label="{{ 'Next image'|t }}">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+          <path d="M9 5L16 12L9 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </button>
+
+      <div class="orbit-banner__pagination swiper-pagination"></div>
+    </div>
+  </div>
+</div>
