@@ -39,13 +39,16 @@ function _orbit_banner_page_banner_components(): array {
   ];
 
   return [
+    // Help tab.
     'field_orbit_banner_help' => [
       'type' => 'markup',
-      'weight' => 10,
+      'weight' => 0,
       'region' => 'content',
       'settings' => [],
       'third_party_settings' => [],
     ],
+
+    // Content tab.
     'field_orbit_banner_title' => [
       'type' => 'string_textfield',
       'weight' => 11,
@@ -67,9 +70,12 @@ function _orbit_banner_page_banner_components(): array {
       'third_party_settings' => [],
     ],
     'field_orbit_banner_image' => ['weight' => 13] + $media_library_widget,
+    'field_orbit_banner_video' => ['weight' => 14] + $media_library_widget,
+
+    // Settings tab.
     'field_orbit_banner_effect' => [
       'type' => 'options_select',
-      'weight' => 14,
+      'weight' => 20,
       'region' => 'content',
       'settings' => [],
       // Only shown once two or more images are selected.
@@ -77,17 +83,16 @@ function _orbit_banner_page_banner_components(): array {
         'conditional_fields' => BannerConditions::effectFieldSettings(),
       ],
     ],
-    'field_orbit_banner_video' => ['weight' => 15] + $media_library_widget,
     'field_orbit_banner_size' => [
       'type' => 'options_select',
-      'weight' => 16,
+      'weight' => 21,
       'region' => 'content',
       'settings' => [],
       'third_party_settings' => [],
     ],
     'field_orbit_banner_parallax' => [
       'type' => 'boolean_checkbox',
-      'weight' => 17,
+      'weight' => 22,
       'region' => 'content',
       'settings' => [
         'display_label' => TRUE,
@@ -96,7 +101,7 @@ function _orbit_banner_page_banner_components(): array {
     ],
     'field_orbit_banner_colour' => [
       'type' => 'color_field_widget_box',
-      'weight' => 18,
+      'weight' => 23,
       'region' => 'content',
       'settings' => [
         'default_colors' => "#ac725e,#d06b64,#f83a22,#fa573c,#ff7537,#ffad46\n#42d692,#16a765,#7bd148,#b3dc6c,#fbe983\n#92e1c0,#9fe1e7,#9fc6e7,#4986e7,#9a9cff\n#b99aff,#c2c2c2,#cabdbf,#cca6ac,#f691b2\n#cd74e6,#a47ae2",
@@ -107,7 +112,56 @@ function _orbit_banner_page_banner_components(): array {
 }
 
 /**
+ * Returns the tabs of the Banner group, in display order.
+ *
+ * @return array[]
+ *   Tab definitions keyed by field group name, each with a 'label' and the
+ *   'fields' it contains.
+ */
+function _orbit_banner_page_banner_tabs(): array {
+  return [
+    'group_banner_content' => [
+      'label' => 'Content',
+      'fields' => [
+        'field_orbit_banner_title',
+        'field_orbit_banner_text',
+        'field_orbit_banner_image',
+        'field_orbit_banner_video',
+      ],
+    ],
+    'group_banner_settings' => [
+      'label' => 'Settings',
+      'fields' => [
+        'field_orbit_banner_effect',
+        'field_orbit_banner_size',
+        'field_orbit_banner_parallax',
+        'field_orbit_banner_colour',
+      ],
+    ],
+    'group_banner_help' => [
+      'label' => 'Help',
+      'fields' => [
+        'field_orbit_banner_help',
+      ],
+    ],
+  ];
+}
+
+/**
  * Adds the Banner field group to the Page node form display.
+ *
+ * The Banner tab holds a horizontal tab set splitting the fields by purpose:
+ *
+ * @code
+ * group_tabs (vertical tabs, shared with other modules)
+ * └── group_banner ............................. tab, "Banner"
+ *     └── group_banner_tabs ................... horizontal tabs
+ *         ├── group_banner_content ............ tab, "Content"
+ *         ├── group_banner_settings ........... tab, "Settings"
+ *         └── group_banner_help ............... tab, "Help"
+ * @endcode
+ *
+ * @see _orbit_banner_page_banner_tabs()
  */
 function _orbit_banner_apply_page_banner_field_group(): void {
   if (!\Drupal::moduleHandler()->moduleExists('field_group')) {
@@ -120,19 +174,86 @@ function _orbit_banner_apply_page_banner_field_group(): void {
   $field_definitions = \Drupal::service('entity_field.manager')
     ->getFieldDefinitions('node', 'basic_page');
 
-  $group_banner_children = [];
-
   foreach (_orbit_banner_page_banner_components() as $field_name => $component) {
-    if (!isset($field_definitions[$field_name])) {
-      continue;
+    if (isset($field_definitions[$field_name])) {
+      $form_display->setComponent($field_name, $component);
     }
-
-    $form_display->setComponent($field_name, $component);
-    $group_banner_children[] = $field_name;
   }
 
-  $form_display->setThirdPartySetting('field_group', 'group_tabs', [
-    'children' => ['group_banner'],
+  // Only fields that actually exist may be listed as group children.
+  $exists = static fn (array $names): array => array_values(array_filter(
+    $names,
+    static fn (string $name): bool => isset($field_definitions[$name])
+  ));
+
+  $tab_defaults = [
+    'region' => 'content',
+    'format_type' => 'tab',
+    'format_settings' => [
+      'classes' => '',
+      'show_empty_fields' => FALSE,
+      'id' => '',
+      'label_as_html' => FALSE,
+      'formatter' => 'closed',
+      'description' => '',
+      'required_fields' => TRUE,
+    ],
+  ];
+
+  $tabs = _orbit_banner_page_banner_tabs();
+  $weight = 0;
+
+  foreach ($tabs as $group_name => $tab) {
+    $form_display->setThirdPartySetting('field_group', $group_name, [
+      'children' => $exists($tab['fields']),
+      'label' => $tab['label'],
+      'parent_name' => 'group_banner_tabs',
+      'weight' => $weight++,
+    ] + $tab_defaults);
+  }
+
+  $form_display->setThirdPartySetting('field_group', 'group_banner_tabs', [
+    'children' => array_keys($tabs),
+    'label' => 'Banner tabs',
+    'region' => 'content',
+    'parent_name' => 'group_banner',
+    'weight' => 0,
+    'format_type' => 'tabs',
+    'format_settings' => [
+      'classes' => '',
+      'show_empty_fields' => FALSE,
+      'id' => '',
+      'label_as_html' => FALSE,
+      'direction' => 'horizontal',
+      'width_breakpoint' => 640,
+    ],
+  ]);
+
+  // Every banner field now lives on one of the nested tabs.
+  $form_display->setThirdPartySetting('field_group', 'group_banner', [
+    'children' => ['group_banner_tabs'],
+    'label' => 'Banner',
+    'parent_name' => 'group_tabs',
+    'weight' => 6,
+  ] + $tab_defaults);
+
+  _orbit_banner_attach_to_tabs_group($form_display);
+
+  $form_display->save();
+}
+
+/**
+ * Adds the Banner tab to the shared vertical tabs group.
+ *
+ * This group is not owned by this module — sibling modules put their own tabs
+ * in it — and field_group nests groups by the parent's 'children' list, not by
+ * each child's 'parent_name'. Overwriting that list would therefore drop every
+ * other tab out of the tab set, so the Banner tab is merged into whatever is
+ * already there.
+ */
+function _orbit_banner_attach_to_tabs_group($form_display): void {
+  $group_tabs = $form_display->getThirdPartySetting('field_group', 'group_tabs') ?: [
+    'children' => [],
     'label' => 'Tabs',
     'region' => 'content',
     'parent_name' => '',
@@ -146,27 +267,19 @@ function _orbit_banner_apply_page_banner_field_group(): void {
       'direction' => 'vertical',
       'width_breakpoint' => 640,
     ],
-  ]);
+  ];
 
-  $form_display->setThirdPartySetting('field_group', 'group_banner', [
-    'children' => $group_banner_children,
-    'label' => 'Banner',
-    'region' => 'content',
-    'parent_name' => 'group_tabs',
-    'weight' => 6,
-    'format_type' => 'tab',
-    'format_settings' => [
-      'classes' => '',
-      'show_empty_fields' => FALSE,
-      'id' => '',
-      'label_as_html' => FALSE,
-      'formatter' => 'closed',
-      'description' => '',
-      'required_fields' => TRUE,
-    ],
-  ]);
+  // Recover any sibling tab that a previous release of this hook orphaned by
+  // replacing the children list outright.
+  foreach ($form_display->getThirdPartySettings('field_group') as $name => $group) {
+    if (($group['parent_name'] ?? '') === 'group_tabs') {
+      $group_tabs['children'][] = $name;
+    }
+  }
 
-  $form_display->save();
+  $group_tabs['children'] = array_values(array_unique($group_tabs['children']));
+
+  $form_display->setThirdPartySetting('field_group', 'group_tabs', $group_tabs);
 }
 
 /**
@@ -234,5 +347,15 @@ function orbit_banner_update_11002(): void {
   }
 
   // Re-applying the components attaches the Conditional Fields dependency.
+  _orbit_banner_apply_page_banner_field_group();
+}
+
+/**
+ * Splits the Banner tab into horizontal Content, Settings and Help tabs.
+ */
+function orbit_banner_update_11003(): void {
+  // Every banner field moves onto one of the nested tabs, and
+  // _orbit_banner_apply_page_banner_field_group() already sets the Banner tab's
+  // children to just the tab set, so no stale children can be left behind.
   _orbit_banner_apply_page_banner_field_group();
 }

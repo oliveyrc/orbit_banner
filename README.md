@@ -26,6 +26,24 @@ On install, the module provides:
 - `field_orbit_banner_parallax` (boolean)
 - `field_orbit_banner_colour` (color field)
 
+### Node form layout
+
+The banner fields sit on a `Banner` vertical tab, split across three horizontal
+tabs:
+
+| Tab | Fields |
+| --- | --- |
+| Content | title, text, images, video |
+| Settings | transition effect, size, parallax, colour |
+| Help | the banner help text |
+
+`group_tabs`, the vertical tab set the `Banner` tab lives in, is shared with
+other modules. field_group nests groups by the parent's `children` list rather
+than each child's `parent_name`, so the install hook merges the Banner tab into
+that list instead of replacing it. Earlier releases replaced it, which silently
+dropped sibling tabs such as SEO and Schedule out of the tab set;
+`_orbit_banner_attach_to_tabs_group()` restores any it finds orphaned.
+
 ### What the block renders
 
 The `page_banner` block picks one of three templates:
@@ -157,6 +175,9 @@ ddev drush cr
 - `orbit_banner_update_11002()` attaches the Conditional Fields dependency that
   hides the transition effect until a second image is added. It requires
   `conditional_fields` to be installed first.
+- `orbit_banner_update_11003()` splits the Banner tab into the Content,
+  Settings and Help horizontal tabs, and re-attaches any sibling tab an earlier
+  release orphaned out of `group_tabs`.
 
 ```bash
 ddev drush updatedb -y
@@ -165,8 +186,10 @@ ddev drush updatedb -y
 ## Verify
 
 1. Go to **Structure -> Content types -> Basic page -> Manage form display**.
-2. Confirm there is a **Tabs** group containing a **Banner** tab.
-3. Confirm the banner fields are inside the **Banner** tab.
+2. Confirm there is a **Tabs** group containing a **Banner** tab, alongside the
+   other tabs the site defines.
+3. Confirm the **Banner** tab contains **Content**, **Settings** and **Help**
+   horizontal tabs, with the fields distributed as described above.
 4. Edit a Basic page. With fewer than two images the **Transition effect**
    field is hidden; adding a second image reveals it without a page reload.
 5. Add two or more images and confirm the banner becomes a slideshow.
