@@ -33,6 +33,33 @@ class OrbitBannerHooks {
   }
 
   /**
+   * Implements hook_config_schema_info_alter().
+   *
+   * Conditional Fields stores a 'regex' setting for regular expression
+   * conditions but does not declare it in conditional_fields.schema.yml, so
+   * any dependency using one is reported as having no schema. Declared here
+   * because this module ships such a dependency.
+   *
+   * @see \Drupal\conditional_fields\Plugin\conditional_fields\handler\DefaultStateHandler::statesHandler()
+   * @todo Remove once https://www.drupal.org/project/conditional_fields
+   *   declares the key itself.
+   */
+  #[Hook('config_schema_info_alter')]
+  public function configSchemaInfoAlter(array &$definitions): void {
+    if (!isset($definitions['conditional_fields.settings']['mapping'])) {
+      return;
+    }
+
+    $definitions['conditional_fields.settings']['mapping'] += [
+      'regex' => [
+        'type' => 'string',
+        'label' => 'Regular expression',
+        'nullable' => TRUE,
+      ],
+    ];
+  }
+
+  /**
    * Implements hook_theme().
    *
    * @return array[]

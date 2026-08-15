@@ -9,6 +9,28 @@
   const AUTOPLAY_DELAY = 6000;
 
   /**
+   * Shows or hides an icon.
+   *
+   * The hidden attribute is set through the DOM rather than the .hidden
+   * property: that property is defined on HTMLElement, and these icons are
+   * SVG elements, so assigning to it would silently create a plain JavaScript
+   * property and leave the markup — and therefore the rendering — untouched.
+   *
+   * @param {SVGElement} icon
+   *   The icon to toggle.
+   * @param {boolean} hidden
+   *   Whether the icon should be hidden.
+   */
+  const setHidden = (icon, hidden) => {
+    if (hidden) {
+      icon.setAttribute('hidden', 'hidden');
+    }
+    else {
+      icon.removeAttribute('hidden');
+    }
+  };
+
+  /**
    * Reflects the autoplay state on the play/pause button.
    *
    * @param {HTMLButtonElement} toggle
@@ -28,10 +50,10 @@
     );
 
     if (iconPlay) {
-      iconPlay.hidden = isPlaying;
+      setHidden(iconPlay, isPlaying);
     }
     if (iconPause) {
-      iconPause.hidden = !isPlaying;
+      setHidden(iconPause, !isPlaying);
     }
   };
 

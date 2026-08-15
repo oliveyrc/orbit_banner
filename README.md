@@ -19,7 +19,8 @@ On install, the module provides:
 - `field_orbit_banner_title` (string)
 - `field_orbit_banner_text` (formatted text)
 - `field_orbit_banner_image` (media reference to `banner_image`, unlimited)
-- `field_orbit_banner_effect` (list: `slide` "Swipe", `fade`)
+- `field_orbit_banner_effect` (list: `slide` "Swipe", `fade`) — shown only when
+  two or more images are selected
 - `field_orbit_banner_video` (media reference to `banner_video`)
 - `field_orbit_banner_size` (list: `small`, `medium`, `large`)
 - `field_orbit_banner_parallax` (boolean)
@@ -46,8 +47,33 @@ value, then to the `banner` site settings group, then to the `defaults` group.
 ### Transition effect
 
 `field_orbit_banner_effect` chooses between Swiper's `slide` (labelled "Swipe")
-and `fade` transitions. It has no effect unless the banner holds more than one
-image. The default is `slide`.
+and `fade` transitions. The default is `slide`.
+
+Because it only means anything for a slideshow, the field is shown on the node
+form only once two or more images are selected, using
+[Conditional Fields](https://www.drupal.org/project/conditional_fields).
+
+Wiring that up needs two pieces, because the media library widget exposes no
+input holding the number of selected items and rebuilds itself over AJAX:
+
+- `OrbitBannerFormHooks` adds a hidden `orbit_banner_image_count` input outside
+  the widget's AJAX wrapper, seeded server side, and `assets/admin.js` keeps it
+  in step as items are added and removed.
+- The dependency stored on the form display uses a regex condition
+  (`^([2-9]|[1-9][0-9]+)$`) against a custom selector pointing at that input.
+  It is defined once in `\Drupal\orbit_banner\BannerConditions`.
+
+Two upstream quirks are worked around, both commented where they are handled:
+
+- `ConditionalFieldsFormHelper::getState()` only builds a `value` condition when
+  the dependee element has a `#name`. Media library widgets are containers and
+  never get one, so `OrbitBannerFormHooks::nameDependeeElement()` sets it on
+  whichever element Conditional Fields registered.
+- Conditional Fields installs its regex comparison from a behaviour marked
+  `weight: -10`, but core's `attachBehaviors()` ignores `weight` and runs
+  behaviours in script load order, so on first paint `Drupal.states` runs before
+  the comparison exists and every regex condition evaluates false.
+  `assets/admin.js` re-fires the state once to force a correct evaluation.
 
 ### Parallax
 
@@ -84,6 +110,7 @@ tints the gradient overlay that sits above the media.
   - `color_field`
   - `markup`
   - `media_library_edit`
+  - `conditional_fields`
   - `field_group`
   - `orbit_media`
   - `site_settings`
@@ -124,9 +151,12 @@ ddev drush cr
 
 ## Updating an existing install
 
-`orbit_banner_update_11001()` switches `field_orbit_banner_image` to unlimited
-cardinality, creates `field_orbit_banner_effect` and
-`field_orbit_banner_parallax`, and re-applies the Banner tab layout:
+- `orbit_banner_update_11001()` switches `field_orbit_banner_image` to unlimited
+  cardinality, creates `field_orbit_banner_effect` and
+  `field_orbit_banner_parallax`, and re-applies the Banner tab layout.
+- `orbit_banner_update_11002()` attaches the Conditional Fields dependency that
+  hides the transition effect until a second image is added. It requires
+  `conditional_fields` to be installed first.
 
 ```bash
 ddev drush updatedb -y
@@ -137,8 +167,9 @@ ddev drush updatedb -y
 1. Go to **Structure -> Content types -> Basic page -> Manage form display**.
 2. Confirm there is a **Tabs** group containing a **Banner** tab.
 3. Confirm the banner fields are inside the **Banner** tab.
-4. Add two or more images to a Basic page and confirm the banner becomes a
-   slideshow.
+4. Edit a Basic page. With fewer than two images the **Transition effect**
+   field is hidden; adding a second image reveals it without a page reload.
+5. Add two or more images and confirm the banner becomes a slideshow.
 
 ## Maintainer
 

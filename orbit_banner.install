@@ -11,6 +11,7 @@ use Drupal\Core\Config\FileStorage;
 use Drupal\Core\Utility\UpdateException;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\orbit_banner\BannerConditions;
 
 /**
  * Implements hook_install().
@@ -71,7 +72,10 @@ function _orbit_banner_page_banner_components(): array {
       'weight' => 14,
       'region' => 'content',
       'settings' => [],
-      'third_party_settings' => [],
+      // Only shown once two or more images are selected.
+      'third_party_settings' => [
+        'conditional_fields' => BannerConditions::effectFieldSettings(),
+      ],
     ],
     'field_orbit_banner_video' => ['weight' => 15] + $media_library_widget,
     'field_orbit_banner_size' => [
@@ -218,5 +222,17 @@ function orbit_banner_update_11001(): void {
   _orbit_banner_install_field('field_orbit_banner_parallax');
 
   // Place the new fields on the Banner tab.
+  _orbit_banner_apply_page_banner_field_group();
+}
+
+/**
+ * Shows the transition effect field only when multiple images are selected.
+ */
+function orbit_banner_update_11002(): void {
+  if (!\Drupal::moduleHandler()->moduleExists('conditional_fields')) {
+    throw new UpdateException('The conditional_fields module must be installed before running this update.');
+  }
+
+  // Re-applying the components attaches the Conditional Fields dependency.
   _orbit_banner_apply_page_banner_field_group();
 }

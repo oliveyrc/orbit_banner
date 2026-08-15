@@ -2,6 +2,10 @@
   --orbit-banner-overlay-from: rgb(0 0 0 / 15%);
   --orbit-banner-overlay-to: rgb(0 0 0 / 25%);
 
+  /* One size for every round control, so the video and slideshow play/pause
+     buttons match each other whatever else sits alongside them. */
+  --orbit-banner-control-size: 50px;
+
   position: relative;
   overflow: hidden;
   height: 266px;
@@ -73,8 +77,11 @@
     background: white;
     color: black;
     display: flex;
-    width: 50px;
+    width: var(--orbit-banner-control-size);
     aspect-ratio: 1;
+    /* The controls row is a flex container; without this the buttons would be
+       squeezed below their set size when several sit side by side. */
+    flex: 0 0 auto;
     border-radius: 50%;
     align-items: center;
     justify-content: center;
@@ -90,6 +97,12 @@
     }
 
     &[hidden] {
+      display: none;
+    }
+
+    /* SVG icons are hidden by attribute, and the attribute alone relies on the
+       user agent rule. Stated explicitly so a theme rule on svg cannot win. */
+    svg[hidden] {
       display: none;
     }
   }
@@ -182,8 +195,11 @@
 }
 
 .orbit-banner__slider-controls {
+  /* Previous/next are secondary to the play/pause control, so they are a step
+     smaller. The play/pause button keeps --orbit-banner-control-size, matching
+     the one on video banners. */
   .orbit-banner__nav {
-    width: 40px;
+    width: calc(var(--orbit-banner-control-size) * 0.8);
   }
 
   .swiper-pagination {

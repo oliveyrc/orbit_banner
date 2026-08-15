@@ -4,6 +4,18 @@ base:
     theme:
       assets/styles.css: {}
 
+# Node form only: feeds the Conditional Fields dependency on the effect field.
+admin:
+  version: 1.0.0
+  js:
+    assets/admin.js: {}
+  dependencies:
+    - core/drupal
+    - core/once
+    - core/jquery
+    - core/drupal.states
+    - conditional_fields/conditional_fields
+
 video:
   version: 1.0.0
   js:
