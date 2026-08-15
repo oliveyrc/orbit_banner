@@ -238,8 +238,61 @@ function _orbit_banner_apply_page_banner_field_group(): void {
   ] + $tab_defaults);
 
   _orbit_banner_attach_to_tabs_group($form_display);
+  _orbit_banner_sort_field_groups($form_display);
 
   $form_display->save();
+}
+
+/**
+ * Reorders the field_group settings so every parent precedes its children.
+ *
+ * Field group decides which groups to hide by walking the groups once and
+ * marking a parent as non-empty when it meets a child that has content, in
+ * field_group_remove_empty_form_groups(). Beforehand,
+ * field_group_remove_empty_form_revert_groups() reverses the group order, so
+ * the walk only reaches a child before its parent when the stored order runs
+ * parent first.
+ *
+ * Groups created by the field_group UI happen to be stored that way. Ones
+ * added by an install hook are appended in call order, so a nested group added
+ * after its parent would never mark that parent as non-empty, and the parent
+ * would be given '#access' => FALSE and vanish from the form.
+ *
+ * @see field_group_remove_empty_form_revert_groups()
+ * @see field_group_remove_empty_form_groups()
+ */
+function _orbit_banner_sort_field_groups($form_display): void {
+  $groups = $form_display->getThirdPartySettings('field_group');
+
+  if (!$groups) {
+    return;
+  }
+
+  $ordered = [];
+
+  $append_children = function (string $parent) use (&$append_children, &$ordered, $groups): void {
+    foreach ($groups as $name => $group) {
+      if (($group['parent_name'] ?? '') === $parent && !isset($ordered[$name])) {
+        $ordered[$name] = $group;
+        $append_children($name);
+      }
+    }
+  };
+  $append_children('');
+
+  // Keep anything whose parent is missing rather than dropping it.
+  $ordered += $groups;
+
+  if (array_keys($ordered) === array_keys($groups)) {
+    return;
+  }
+
+  foreach (array_keys($groups) as $name) {
+    $form_display->unsetThirdPartySetting('field_group', $name);
+  }
+  foreach ($ordered as $name => $group) {
+    $form_display->setThirdPartySetting('field_group', $name, $group);
+  }
 }
 
 /**
